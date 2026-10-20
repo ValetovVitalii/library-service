@@ -1,0 +1,62 @@
+<%- include('partials/header', { title: book.title }) %>
+
+<p><a href="/">← Каталогқа оралу</a></p>
+
+<h1><%= book.title %></h1>
+
+<dl class="details">
+  <dt>Автор</dt><dd><%= book.author_name %></dd>
+  <dt>ISBN</dt><dd><%= book.isbn %></dd>
+  <dt>Жанр</dt><dd><%= book.genre || '—' %></dd>
+  <dt>Баспа</dt><dd><%= book.publisher || '—' %></dd>
+  <dt>Шыққан жылы</dt><dd><%= book.publish_year || '—' %></dd>
+  <dt>Беттер саны</dt><dd><%= book.pages || '—' %></dd>
+  <dt>Тілі</dt><dd><%= book.language || '—' %></dd>
+  <dt>Даналар</dt>
+  <dd>
+    <span class="badge <%= book.available_copies > 0 ? 'ok' : 'none' %>">
+      бос: <%= book.available_copies %> / барлығы: <%= book.total_copies %>
+    </span>
+  </dd>
+  <dt>Сипаттама</dt><dd><%= book.description || '—' %></dd>
+</dl>
+
+<p class="muted">
+  Дерек форматтары:
+  <a href="/api/books/<%= book.id %>">JSON</a> ·
+  <a href="/api/books/<%= book.id %>?format=xml">XML</a>
+</p>
+
+<h2>Алу тарихы</h2>
+<% if (history.length === 0) { %>
+  <p class="empty">Бұл кітап әлі берілмеген.</p>
+<% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Оқырман</th>
+        <th>Алған күні</th>
+        <th>Қайтару мерзімі</th>
+        <th>Қайтарған күні</th>
+        <th>Күйі</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% history.forEach(function (h) { %>
+        <tr>
+          <td><%= h.reader_name %></td>
+          <td><%= h.borrowed_at %></td>
+          <td><%= h.due_date %></td>
+          <td><%= h.returned_at || '—' %></td>
+          <td>
+            <span class="badge <%= h.status === 'borrowed' ? 'none' : 'ok' %>">
+              <%= h.status === 'borrowed' ? 'қолда' : 'қайтарылған' %>
+            </span>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('partials/footer') %>

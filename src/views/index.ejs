@@ -1,0 +1,52 @@
+<%- include('partials/header', { title: 'Басты бет' }) %>
+
+<h1>Кітаптар каталогы</h1>
+
+<section class="stats">
+  <div class="stat"><strong><%= stats.books %></strong><span>Кітап</span></div>
+  <div class="stat"><strong><%= stats.authors %></strong><span>Автор</span></div>
+  <div class="stat"><strong><%= stats.readers %></strong><span>Оқырман</span></div>
+  <div class="stat"><strong><%= stats.active %></strong><span>Қолда жүрген кітап</span></div>
+</section>
+
+<form class="search" method="GET" action="/">
+  <input type="text" name="search" value="<%= search %>" placeholder="Кітап атауы, автор немесе ISBN">
+  <button type="submit">Іздеу</button>
+  <% if (search) { %><a href="/">Тазалау</a><% } %>
+</form>
+
+<% if (books.length === 0) { %>
+  <p class="empty">Ештеңе табылмады.</p>
+<% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Атауы</th>
+        <th>Автор</th>
+        <th>Жанр</th>
+        <th>Жылы</th>
+        <th>Бос даналар</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% books.forEach(function (b) { %>
+        <tr>
+          <td><%= b.id %></td>
+          <td><a href="/books/<%= b.id %>"><%= b.title %></a></td>
+          <td><%= b.author_name %></td>
+          <td><%= b.genre || '—' %></td>
+          <td><%= b.publish_year || '—' %></td>
+          <td>
+            <span class="badge <%= b.available_copies > 0 ? 'ok' : 'none' %>">
+              <%= b.available_copies %> / <%= b.total_copies %>
+            </span>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <p class="muted">Табылды: <%= books.length %></p>
+<% } %>
+
+<%- include('partials/footer') %>
